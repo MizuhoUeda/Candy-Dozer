@@ -4,9 +4,16 @@ using UnityEngine;
 
 public class Shooter : MonoBehaviour {
 
-	public GameObject candyPrefab;
+	const int SphereCandyFrequency = 3;
+
+	int sampleCandyCount;
+
+	public GameObject[] candyPrefabs;
+	public GameObject[] candySquarePrefabs;
+	public GameObject candyHolder;
 	public float shotSpeed;
 	public float shotTorque;
+	public float baseWidth;
 	
 	// Update is called once per frame
 	void Update () 
@@ -14,13 +21,39 @@ public class Shooter : MonoBehaviour {
 		if(Input.GetButtonDown("Fire1")) Shot();
 	}
 
+	GameObject SampleCandy()
+	{
+		GameObject prefab = null;
+
+		if(sampleCandyCount % SphereCandyFrequency == 0) 
+		{
+			int index = Random.Range(0,candyPrefabs.Length);
+			prefab = candyPrefabs[index];
+		}else{
+			int index = Random.Range(0,candySquarePrefabs.Length);
+			prefab = candySquarePrefabs[index];
+		}
+
+		sampleCandyCount++;
+
+		return prefab;
+	}
+
+	Vector3 GetInstantiatePosition()
+	{
+		float x = baseWidth * (Input.mousePosition.x / Screen.width) - (baseWidth/2);
+		return transform.position + new Vector3(x,0,0);
+	}
+
 	public void Shot()
 	{
 		GameObject candy = (GameObject)Instantiate(
-			candyPrefab,
-			transform.position,
+			SampleCandy(),
+			GetInstantiatePosition(),
 			Quaternion.identity
 			);
+
+		candy.transform.parent = candyHolder.transform;
 
 		Rigidbody candyRigidBody = candy.GetComponent<Rigidbody>();
 		candyRigidBody.AddForce(transform.forward * shotSpeed);
