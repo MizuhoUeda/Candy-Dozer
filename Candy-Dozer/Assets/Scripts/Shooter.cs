@@ -10,7 +10,7 @@ public class Shooter : MonoBehaviour {
 
 	public GameObject[] candyPrefabs;
 	public GameObject[] candySquarePrefabs;
-	public GameObject candyHolder;
+	public CandyHolder candyHolder;
 	public float shotSpeed;
 	public float shotTorque;
 	public float baseWidth;
@@ -47,6 +47,7 @@ public class Shooter : MonoBehaviour {
 
 	public void Shot()
 	{
+		if(candyHolder.GetCandyAmount() <= 0) return;
 		GameObject candy = (GameObject)Instantiate(
 			SampleCandy(),
 			GetInstantiatePosition(),
@@ -58,5 +59,9 @@ public class Shooter : MonoBehaviour {
 		Rigidbody candyRigidBody = candy.GetComponent<Rigidbody>();
 		candyRigidBody.AddForce(transform.forward * shotSpeed);
 		candyRigidBody.AddTorque(new Vector3(0,shotTorque,0));
+
+
+	candyHolder.ConsumeCandy();
 	}
+
 }
