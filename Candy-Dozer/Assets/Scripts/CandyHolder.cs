@@ -5,8 +5,10 @@ using UnityEngine;
 public class CandyHolder : MonoBehaviour {
 
 	const int DefaultCandyAmount = 30;
+	const int RecoverySeconds = 10;
 
 	int candy = DefaultCandyAmount;
+	int counter;
 
 	public void ConsumeCandy()
 	{
@@ -29,6 +31,29 @@ public class CandyHolder : MonoBehaviour {
 
 		string label = "Candy: " + candy;
 
+		if(counter > 0) label = label + "(" + counter + "s)";
+
 		GUI.Label(new Rect(0,0,100,30),label);
+	}
+
+	void Update()
+	{
+		if(candy < DefaultCandyAmount && counter <= 0)
+		{
+			StartCoroutine(RecoveryCandy());
+		}
+	}
+
+	IEnumerator RecoveryCandy()
+	{
+		counter = RecoverySeconds;
+
+		while(counter > 0)
+		{
+			yield return new WaitForSeconds(1.0f);
+			counter--;
+		}
+
+		candy++;
 	}
 }
