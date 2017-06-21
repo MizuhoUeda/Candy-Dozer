@@ -5,8 +5,12 @@ using UnityEngine;
 public class Shooter : MonoBehaviour {
 
 	const int SphereCandyFrequency = 3;
+	const int MaxShotPower = 5;
+	const int RecoverySeconds = 3;
 
 	int sampleCandyCount;
+	int shotPower = MaxShotPower;
+
 
 	public GameObject[] candyPrefabs;
 	public GameObject[] candySquarePrefabs;
@@ -48,6 +52,7 @@ public class Shooter : MonoBehaviour {
 	public void Shot()
 	{
 		if(candyHolder.GetCandyAmount() <= 0) return;
+		if(shotPower <= 0) return;
 		GameObject candy = (GameObject)Instantiate(
 			SampleCandy(),
 			GetInstantiatePosition(),
@@ -62,6 +67,29 @@ public class Shooter : MonoBehaviour {
 
 
 	candyHolder.ConsumeCandy();
+	ConsumePower();
+	}
+
+	void OnGUI()
+	{
+		GUI.color = Color.black;
+
+		string label = "";
+		for(int i =0;i < shotPower;i++) label = label + "+";
+
+		GUI.Label(new Rect(0,15,100,30),label);
+	}
+
+	void ConsumePower()
+	{
+		shotPower--;
+		StartCoroutine(RecoveryPower());
+	}
+
+	IEnumerator RecoveryPower()
+	{
+		yield return new WaitForSeconds(RecoverySeconds);
+		shotPower++;
 	}
 
 }
