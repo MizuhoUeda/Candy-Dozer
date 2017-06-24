@@ -6,6 +6,8 @@ public class CandyDestroyer : MonoBehaviour {
 
 	public CandyHolder candyHolder;
 	public int reward;
+	public GameObject effectPrefab;
+	public Vector3 effectRotation;
 
 	void OnTriggerEnter (Collider other)
 	{
@@ -13,6 +15,15 @@ public class CandyDestroyer : MonoBehaviour {
 		{
 			candyHolder.AddCandy(reward);
 			Destroy(other.gameObject);
+
+			if(effectPrefab != null)
+			{
+				Instantiate(
+					effectPrefab,
+					other.transform.position,
+					Quaternion.Euler(effectRotation)
+					);
+			}
 		}
 	}
 }

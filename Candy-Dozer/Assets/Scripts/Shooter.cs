@@ -10,6 +10,7 @@ public class Shooter : MonoBehaviour {
 
 	int sampleCandyCount;
 	int shotPower = MaxShotPower;
+	AudioSource shotSound;
 
 
 	public GameObject[] candyPrefabs;
@@ -19,6 +20,11 @@ public class Shooter : MonoBehaviour {
 	public float shotTorque;
 	public float baseWidth;
 	
+	void Start ()
+	{
+		shotSound = GetComponent<AudioSource>();
+	}
+
 	// Update is called once per frame
 	void Update () 
 	{
@@ -68,6 +74,7 @@ public class Shooter : MonoBehaviour {
 
 	candyHolder.ConsumeCandy();
 	ConsumePower();
+	shotSound();
 	}
 
 	void OnGUI()
